@@ -1,0 +1,8 @@
+bin/
+obj/
+uploads/
+.vs/
+*.user
+*.md
+.git/
+tests/

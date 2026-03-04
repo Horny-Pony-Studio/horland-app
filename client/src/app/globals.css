@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 235 35% 13%;
+    --card: 270 100% 98%;
+    --card-foreground: 235 35% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 235 35% 13%;
+    --primary: 263 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 263 30% 93%;
+    --secondary-foreground: 263 70% 30%;
+    --muted: 263 20% 95%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 263 30% 93%;
+    --accent-foreground: 263 70% 30%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 263 20% 90%;
+    --input: 263 20% 90%;
+    --ring: 263 70% 50%;
+    --radius: 0.75rem;
+  }
+  .dark {
+    --background: 235 35% 8%;
+    --foreground: 0 0% 95%;
+    --card: 235 35% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 235 35% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 263 70% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 263 30% 20%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 263 20% 15%;
+    --muted-foreground: 215 16% 60%;
+    --accent: 263 30% 20%;
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 263 20% 18%;
+    --input: 263 20% 18%;
+    --ring: 263 70% 60%;
+  }
+}
