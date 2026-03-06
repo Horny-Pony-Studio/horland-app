@@ -67,6 +67,9 @@ public class CompanyService : ICompanyService
         if (!Enum.TryParse<CompanyType>(request.Type, true, out var companyType))
             throw new InvalidOperationException($"Invalid company type: {request.Type}");
 
+        var user = await _dbContext.Users.FindAsync(userId)
+            ?? throw new KeyNotFoundException("User not found");
+
         var company = new Company
         {
             Id = Guid.NewGuid(),
@@ -83,8 +86,18 @@ public class CompanyService : ICompanyService
             Role = MemberRole.Owner
         };
 
+        var partner = new Partner
+        {
+            Id = Guid.NewGuid(),
+            CompanyId = company.Id,
+            UserId = userId,
+            FullName = user.FullName,
+            CompanyShare = 100m
+        };
+
         _dbContext.Companies.Add(company);
         _dbContext.CompanyMembers.Add(member);
+        _dbContext.Partners.Add(partner);
         await _dbContext.SaveChangesAsync();
 
         await _auditLog.LogAsync(company.Id, userId, "Created", "Company", company.Id,
@@ -94,7 +107,7 @@ public class CompanyService : ICompanyService
             company.Id,
             company.Name,
             company.Type.ToString(),
-            0,
+            1,
             member.Role.ToString(),
             company.CreatedAt
         );

@@ -64,6 +64,15 @@ public class CompanyServiceTests
         member.Should().NotBeNull();
         member!.Role.Should().Be(MemberRole.Owner);
         member.UserId.Should().Be(userId);
+
+        // Creator should be automatically added as the first partner with 100% share
+        var partner = await dbContext.Partners.FirstOrDefaultAsync();
+        partner.Should().NotBeNull();
+        partner!.UserId.Should().Be(userId);
+        partner.CompanyShare.Should().Be(100m);
+        partner.FullName.Should().Be("Test User");
+
+        result.PartnersCount.Should().Be(1);
     }
 
     [Fact]
