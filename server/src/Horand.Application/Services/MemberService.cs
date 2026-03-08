@@ -63,6 +63,22 @@ public class MemberService : IMemberService
         };
 
         _dbContext.CompanyMembers.Add(member);
+
+        // Also create a partner with 0% share if not already a partner
+        var alreadyPartner = await _dbContext.Partners
+            .AnyAsync(p => p.CompanyId == companyId && p.UserId == user.Id);
+        if (!alreadyPartner)
+        {
+            _dbContext.Partners.Add(new Partner
+            {
+                Id = Guid.NewGuid(),
+                CompanyId = companyId,
+                UserId = user.Id,
+                FullName = user.FullName,
+                CompanyShare = 0
+            });
+        }
+
         await _dbContext.SaveChangesAsync();
 
         await _auditLog.LogAsync(companyId, userId, "Added", "Member", member.Id,
@@ -124,6 +140,25 @@ public class MemberService : IMemberService
 
         if (member.UserId == userId)
             throw new InvalidOperationException("You cannot remove yourself from the company");
+
+        // Also remove the associated partner and their related data
+        var partner = await _dbContext.Partners
+            .FirstOrDefaultAsync(p => p.CompanyId == companyId && p.UserId == member.UserId);
+
+        if (partner != null)
+        {
+            var relatedSigns = await _dbContext.AgreementSigns
+                .Where(s => s.PartnerId == partner.Id)
+                .ToListAsync();
+
+            var relatedShares = await _dbContext.RevenueShares
+                .Where(rs => rs.PartnerId == partner.Id)
+                .ToListAsync();
+
+            _dbContext.AgreementSigns.RemoveRange(relatedSigns);
+            _dbContext.RevenueShares.RemoveRange(relatedShares);
+            _dbContext.Partners.Remove(partner);
+        }
 
         _dbContext.CompanyMembers.Remove(member);
         await _dbContext.SaveChangesAsync();

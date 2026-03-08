@@ -16,6 +16,8 @@ export function useAddMember(companyId: string) {
     mutationFn: (data: AddMemberRequest) => membersApi.add(companyId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['members', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['partners', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['companies', companyId] });
     },
   });
 }
@@ -36,6 +38,8 @@ export function useRemoveMember(companyId: string) {
     mutationFn: (memberId: string) => membersApi.remove(companyId, memberId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['members', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['partners', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['companies', companyId] });
     },
   });
 }

@@ -170,10 +170,15 @@ public class PartnerService : IPartnerService
         if (partner == null)
             throw new KeyNotFoundException("Partner not found");
 
+        var relatedSigns = await _dbContext.AgreementSigns
+            .Where(s => s.PartnerId == partnerId)
+            .ToListAsync();
+
         var relatedShares = await _dbContext.RevenueShares
             .Where(rs => rs.PartnerId == partnerId)
             .ToListAsync();
 
+        _dbContext.AgreementSigns.RemoveRange(relatedSigns);
         _dbContext.RevenueShares.RemoveRange(relatedShares);
         _dbContext.Partners.Remove(partner);
 

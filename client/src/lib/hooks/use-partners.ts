@@ -16,6 +16,7 @@ export function useCreatePartner(companyId: string) {
     mutationFn: (data: CreatePartnerRequest) => partnersApi.create(companyId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['partners', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['members', companyId] });
       queryClient.invalidateQueries({ queryKey: ['companies', companyId] });
     },
   });
@@ -39,6 +40,7 @@ export function useDeletePartner(companyId: string) {
     mutationFn: (partnerId: string) => partnersApi.delete(companyId, partnerId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['partners', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['members', companyId] });
       queryClient.invalidateQueries({ queryKey: ['companies', companyId] });
     },
   });
